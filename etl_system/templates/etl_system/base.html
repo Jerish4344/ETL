@@ -24,6 +24,14 @@
         .sidebar .active {
             background-color: #0d6efd;
         }
+        .sidebar .nav-section {
+            color: #adb5bd;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px 15px 5px 15px;
+            margin-top: 20px;
+        }
         .main-content {
             padding: 20px;
         }
@@ -33,6 +41,17 @@
         .card-dashboard:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
         }
     </style>
 </head>
@@ -72,6 +91,7 @@
             {% if user.is_authenticated %}
             <div class="col-md-2 sidebar">
                 <div class="nav flex-column">
+                    <div class="nav-section">Configuration</div>
                     <a href="{% url 'source_info_list' %}" class="{% if 'sources' in request.path %}active{% endif %}">
                         <i class="fas fa-database me-2"></i> Sources
                     </a>
@@ -84,7 +104,17 @@
                     <a href="{% url 'table_schema_list' %}" class="{% if 'schemas' in request.path %}active{% endif %}">
                         <i class="fas fa-sitemap me-2"></i> Table Schemas
                     </a>
+                    
+                    <div class="nav-section">Operations</div>
+                    <a href="{% url 'etl_execution' %}" class="{% if 'etl-execution' in request.path %}active{% endif %}">
+                        <i class="fas fa-play me-2"></i> ETL Execution
+                    </a>
+                    <a href="{% url 'data_viewer' %}" class="{% if 'data-viewer' in request.path %}active{% endif %}">
+                        <i class="fas fa-eye me-2"></i> Data Viewer
+                    </a>
+                    
                     {% if perms.etl_system.view_databasecred %}
+                    <div class="nav-section">Admin</div>
                     <a href="{% url 'database_cred_list' %}" class="{% if 'credentials' in request.path %}active{% endif %}">
                         <i class="fas fa-key me-2"></i> Database Credentials
                     </a>
@@ -112,5 +142,38 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Function to show loading spinner
+        function showLoading(element) {
+            const spinner = element.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.display = 'inline-block';
+            }
+            element.disabled = true;
+        }
+        
+        // Function to hide loading spinner
+        function hideLoading(element) {
+            const spinner = element.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+            element.disabled = false;
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                if (alert.classList.contains('alert-success')) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 150);
+                }
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

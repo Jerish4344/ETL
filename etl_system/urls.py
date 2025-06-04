@@ -1,3 +1,4 @@
+# etl_system/urls.py
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
@@ -16,6 +17,15 @@ urlpatterns = [
     
     # Dashboard
     path('', views.dashboard, name='dashboard'),
+    
+    # ETL Execution URLs
+    path('etl-execution/', views.etl_execution, name='etl_execution'),
+    path('etl-execution/execute/<int:datasrc_id>/', views.execute_etl, name='execute_etl'),
+    
+    # Data Viewer URLs
+    path('data-viewer/', views.data_viewer, name='data_viewer'),
+    path('data-viewer/table/<int:table_id>/', views.view_table_data, name='view_table_data'),
+    path('data-viewer/export/<int:table_id>/', views.export_table_data, name='export_table_data'),
     
     # Source Info URLs
     path('sources/', views.SourceInfoListView.as_view(), name='source_info_list'),

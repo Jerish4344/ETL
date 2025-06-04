@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from pathlib import Path
 import os
 
@@ -26,7 +29,7 @@ SECRET_KEY = 'django-insecure-i7y$g!om4$gg70d((kdpruam7z4^rn8uxrpd&0!b^1&0%z2b=@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.250.185']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'etl_system'
 ]
 
@@ -76,8 +80,22 @@ WSGI_APPLICATION = 'etl_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    # Remote ETL configuration database (server)
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'etl_db',  # Configuration database on server
+        'USER': 'RRPLDATA',
+        'PASSWORD': '$t06ngPa$$w0rd',
+        'HOST': '192.168.2.76',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    },
+    
+    # Local target database (for ETL results)
+    'local_target': {
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'etl_db',
         'USER': 'root',
         'PASSWORD': 'root@2001',
