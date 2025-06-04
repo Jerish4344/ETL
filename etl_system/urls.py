@@ -1,0 +1,54 @@
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from . import views
+from .forms import CustomAuthenticationForm
+
+urlpatterns = [
+    # Authentication
+    path('login/', auth_views.LoginView.as_view(
+        template_name='etl_system/login.html',
+        authentication_form=CustomAuthenticationForm
+    ), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(
+        next_page='login', 
+        http_method_names=['get', 'post']  
+    ), name='logout'),
+    
+    # Dashboard
+    path('', views.dashboard, name='dashboard'),
+    
+    # Source Info URLs
+    path('sources/', views.SourceInfoListView.as_view(), name='source_info_list'),
+    path('sources/<int:pk>/', views.SourceInfoDetailView.as_view(), name='source_info_detail'),
+    path('sources/new/', views.SourceInfoCreateView.as_view(), name='source_info_create'),
+    path('sources/<int:pk>/edit/', views.SourceInfoUpdateView.as_view(), name='source_info_update'),
+    path('sources/<int:pk>/delete/', views.SourceInfoDeleteView.as_view(), name='source_info_delete'),
+    
+    # Table Info URLs
+    path('tables/', views.TableInfoListView.as_view(), name='table_info_list'),
+    path('tables/<int:pk>/', views.TableInfoDetailView.as_view(), name='table_info_detail'),
+    path('tables/new/', views.TableInfoCreateView.as_view(), name='table_info_create'),
+    path('tables/<int:pk>/edit/', views.TableInfoUpdateView.as_view(), name='table_info_update'),
+    path('tables/<int:pk>/delete/', views.TableInfoDeleteView.as_view(), name='table_info_delete'),
+    
+    # Source File Info URLs
+    path('files/', views.SourceFileInfoListView.as_view(), name='source_file_info_list'),
+    path('files/<int:pk>/', views.SourceFileInfoDetailView.as_view(), name='source_file_info_detail'),
+    path('files/new/', views.SourceFileInfoCreateView.as_view(), name='source_file_info_create'),
+    path('files/<int:pk>/edit/', views.SourceFileInfoUpdateView.as_view(), name='source_file_info_update'),
+    path('files/<int:pk>/delete/', views.SourceFileInfoDeleteView.as_view(), name='source_file_info_delete'),
+    
+    # Table Schema URLs
+    path('schemas/', views.TableSchemaListView.as_view(), name='table_schema_list'),
+    path('schemas/<int:pk>/', views.TableSchemaDetailView.as_view(), name='table_schema_detail'),
+    path('schemas/new/', views.TableSchemaCreateView.as_view(), name='table_schema_create'),
+    path('schemas/<int:pk>/edit/', views.TableSchemaUpdateView.as_view(), name='table_schema_update'),
+    path('schemas/<int:pk>/delete/', views.TableSchemaDeleteView.as_view(), name='table_schema_delete'),
+    
+    # Database Credential URLs (Admin Only)
+    path('credentials/', views.DatabaseCredListView.as_view(), name='database_cred_list'),
+    path('credentials/<int:pk>/', views.DatabaseCredDetailView.as_view(), name='database_cred_detail'),
+    path('credentials/new/', views.DatabaseCredCreateView.as_view(), name='database_cred_create'),
+    path('credentials/<int:pk>/edit/', views.DatabaseCredUpdateView.as_view(), name='database_cred_update'),
+    path('credentials/<int:pk>/delete/', views.DatabaseCredDeleteView.as_view(), name='database_cred_delete'),
+]
